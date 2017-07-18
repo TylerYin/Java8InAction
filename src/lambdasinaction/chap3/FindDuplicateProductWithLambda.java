@@ -11,20 +11,19 @@ import java.util.stream.Stream;
 
 public class FindDuplicateProductWithLambda {
 	public static void main(String... args) throws FileNotFoundException, IOException {
-		try (Stream<String> oemModelLines = Files.lines(Paths.get("src/lambdasinaction/chap3/Product2OEMModel1.impex"),
+		try (Stream<String> oemModelLines = Files.lines(Paths.get("src/lambdasinaction/chap3/OEMModel1.txt"),
 				Charset.defaultCharset())) {
-			FileWriter fileWriter = new FileWriter("src/lambdasinaction/chap3/DuplicateMoreThan100OEMPart.txt");
+			FileWriter fileWriter = new FileWriter("src/lambdasinaction/chap3/OEMModel_Duplicate.txt");
 			try (BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
 				oemModelLines.forEach(productCode -> {
 					try (Stream<String> product2OEMModellines = Files.lines(
-							Paths.get("src/lambdasinaction/chap3/Product2OEMModel3.impex"), Charset.defaultCharset())) {
+							Paths.get("src/lambdasinaction/chap3/OEMModel2.txt"), Charset.defaultCharset())) {
 						long appearTimes = product2OEMModellines
-								.filter(oemProduct2OEMModel -> oemProduct2OEMModel.equals(productCode.trim())).count();
-						if (appearTimes > 100) {
-							String outputLine = "Product code = " + productCode + ", appear times : " + appearTimes;
+								.filter(oemProduct2OEMModel -> oemProduct2OEMModel.trim().equals(productCode.trim())).count();
+						if (appearTimes > 1) {
 							bufferedWriter.newLine();
-							bufferedWriter.write(outputLine);
-							System.out.println(outputLine);
+							bufferedWriter.write(productCode);
+							System.out.println(productCode);
 						}
 					} catch (IOException e) {
 						e.printStackTrace();
