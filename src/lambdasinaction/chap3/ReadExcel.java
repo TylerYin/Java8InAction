@@ -7,7 +7,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -16,7 +15,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class ReadExcel {
 	public static void main(String[] args) throws FileNotFoundException, IOException {
-		InputStream is = new FileInputStream("src/lambdasinaction/chap3/OEMParts_032417.xlsx");
+		InputStream is = new FileInputStream("src/lambdasinaction/chap3/Book1.xlsx");
 		XSSFWorkbook xssfWorkbook = new XSSFWorkbook(is);
 
 		// Read the Sheet
@@ -24,27 +23,23 @@ public class ReadExcel {
 
 		long num = 0;
 		String line;
-		FileWriter fileWriter = new FileWriter("D:\\OEMParts_032417.impex");
+		FileWriter fileWriter = new FileWriter("src/lambdasinaction/chap3/Book1.impex");
 		try (BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
 			// Read the Row
-			for (int rowNum = 1; rowNum <= xssfSheet.getLastRowNum(); rowNum++) {
+			for (int rowNum = 0; rowNum <= xssfSheet.getLastRowNum(); rowNum++) {
 				XSSFRow xssfRow = xssfSheet.getRow(rowNum);
 				if (xssfRow != null) {
-					XSSFCell oemName = xssfRow.getCell(0);
-					XSSFCell oempartNumber = xssfRow.getCell(1);
+					XSSFCell oempartNumber = xssfRow.getCell(0);
+					XSSFCell available = xssfRow.getCell(1);
+					XSSFCell reserverd = xssfRow.getCell(2);
 
-					if (null == oemName || StringUtils.isBlank(getValue(oemName)) || null == oempartNumber
-							|| StringUtils.isBlank(getValue(oempartNumber).trim())) {
-						if (null == oemName || StringUtils.isBlank(getValue(oemName))) {
-							System.out.println(getValue(oempartNumber));
-						} else {
-							System.out.println(getValue(oemName));
-						}
-					} else {
+					if (oempartNumber != null && reserverd != null && available != null) {
 						num++;
-						line = ";" + StringUtils.trim(getValue(oemName)) + ";"
-								+ StringUtils.trim(getValue(oemName)).toLowerCase() + " - "
-								+ StringUtils.trim(getValue(oempartNumber)).toLowerCase();
+						line = ";" + getValue(oempartNumber) + ";"
+								+ getValue(available).substring(0, getValue(available).indexOf(".")) + ";"
+								+ getValue(reserverd).substring(0, getValue(reserverd).indexOf(".")) + ";"
+								+ "oregonWarehouse;notSpecified";
+						System.out.println(line);
 						bufferedWriter.write(line);
 						bufferedWriter.newLine();
 					}
