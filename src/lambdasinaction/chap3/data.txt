@@ -1,5 +1,5 @@
 Java
 8
-Lambdas
+Lambda
 In
 Action
